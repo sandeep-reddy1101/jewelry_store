@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './components/layouts/MainLayout';
+import Dashboard from './pages/Dashboard/Dashboard';
 import ProductsPage from './pages/Products/ProductsPage';
 import InvoicesPage from './pages/Invoices/InvoicesPage';
 import NewInvoicePage from './pages/Invoices/NewInvoicePage';
@@ -10,13 +11,15 @@ function App() {
     <Router>
       <MainLayout>
         <Routes>
-          <Route path="/" element={<div>Dashboard</div>} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/categories" element={<div>Categories</div>} />
           <Route path="/vendors" element={<div>Vendors</div>} />
           <Route path="/invoices" element={<InvoicesPage />} />
           <Route path="/invoices/new" element={<NewInvoicePage />} />
           <Route path="/employees" element={<div>Employees</div>} />
+          <Route path="/analytics" element={<div>Analytics</div>} />
+          <Route path="/settings" element={<div>Settings</div>} />
         </Routes>
       </MainLayout>
     </Router>
