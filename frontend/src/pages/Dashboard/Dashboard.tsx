@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import Spinner from '../../components/common/Spinner';
+import PageHeader from '../../components/common/PageHeader';
+import StatsGrid from '../../components/common/StatsGrid';
 import {
   SparklesIcon,
   DocumentTextIcon,
   UsersIcon,
   ChartBarIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
   ExclamationTriangleIcon,
   BanknotesIcon,
 } from '@heroicons/react/24/outline';
@@ -154,56 +154,14 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-display font-bold mb-2 text-gray-800 text-contrast">Welcome back! ✨</h1>
-            <p className="text-gray-700 text-lg font-medium">
-              Here's what's happening at {STORE_DISPLAY.brandName} today.
-            </p>
-          </div>
-          <div className="hidden lg:block">
-            <SparklesIcon className="h-16 w-16 text-primary-500 animate-float" />
-          </div>
-        </div>
-      </Card>
+      <PageHeader
+        title="Welcome back! ✨"
+        description={`Here's what's happening at ${STORE_DISPLAY.brandName} today.`}
+        icon={SparklesIcon}
+      />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat, index) => (
-          <Card key={index} hover className="relative overflow-hidden card-hover group">
-            <div className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className={`${stat.bgColor} p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                    <stat.icon className="h-6 w-6 text-white drop-shadow-sm" />
-                  </div>
-                </div>
-                <div className="ml-4 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-semibold text-gray-600 truncate">{stat.name}</dt>
-                    <dd className="flex items-baseline">
-                      <div className="text-2xl font-bold text-gray-800 text-contrast">{stat.value}</div>
-                      {stat.trend && (
-                        <div className={`ml-2 flex items-baseline text-sm font-bold ${
-                          stat.trend.isPositive ? 'text-success-600' : 'text-danger-600'
-                        }`}>
-                          {stat.trend.isPositive ? (
-                            <ArrowTrendingUpIcon className="h-4 w-4 flex-shrink-0 self-center" />
-                          ) : (
-                            <ArrowTrendingDownIcon className="h-4 w-4 flex-shrink-0 self-center" />
-                          )}
-                          <span className="ml-1">{stat.trend.value}%</span>
-                        </div>
-                      )}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <StatsGrid stats={statCards} />
 
       {/* Quick Actions */}
       <Card padding="md">

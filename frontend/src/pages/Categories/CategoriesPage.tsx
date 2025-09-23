@@ -6,16 +6,16 @@ import Card from '../../components/common/Card';
 import FormModal from '../../components/common/FormModal';
 import CategoryForm from '../../components/forms/CategoryForm';
 import Spinner from '../../components/common/Spinner';
+import PageHeader from '../../components/common/PageHeader';
+import StatsGrid from '../../components/common/StatsGrid';
+import SearchFilterBar from '../../components/common/SearchFilterBar';
 import {
   PlusIcon,
   TagIcon,
   PencilIcon,
   TrashIcon,
-  MagnifyingGlassIcon,
   SparklesIcon,
   ArrowDownTrayIcon,
-  Squares2X2Icon,
-  ListBulletIcon,
 } from '@heroicons/react/24/outline';
 
 type ViewMode = 'grid' | 'table';
@@ -170,44 +170,14 @@ const CategoriesPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-display font-bold mb-2 text-gray-800 text-contrast">Product Categories ✨</h1>
-            <p className="text-gray-700 text-lg font-medium">
-              Organize your jewelry collection efficiently. {categories.length} categories available to classify your products.
-            </p>
-          </div>
-          <div className="hidden lg:block">
-            <TagIcon className="h-16 w-16 text-primary-500 animate-float" />
-          </div>
-        </div>
-      </Card>
+      <PageHeader
+        title="Product Categories ✨"
+        description={`Organize your jewelry collection efficiently. ${categories.length} categories available to classify your products.`}
+        icon={TagIcon}
+      />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {statsCards.map((stat, index) => (
-          <Card key={index} hover className="relative overflow-hidden card-hover group">
-            <div className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className={`${stat.bgColor} p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                    <stat.icon className="h-6 w-6 text-white drop-shadow-sm" />
-                  </div>
-                </div>
-                <div className="ml-4 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-semibold text-gray-600 truncate">{stat.name}</dt>
-                    <dd className="flex items-baseline">
-                      <div className="text-2xl font-bold text-gray-800 text-contrast">{stat.value}</div>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <StatsGrid stats={statsCards} columns={2} />
 
       {/* Header Actions */}
       <Card padding="md" className="bg-gradient-to-r from-white to-gray-50/50">
@@ -236,81 +206,26 @@ const CategoriesPage: React.FC = () => {
       </Card>
 
       {/* Search and Filters */}
-      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
-        <div className="flex flex-col lg:flex-row lg:items-end gap-6">
-          {/* Search Section */}
-          <div className="flex-1 min-w-0">
-            <label className="block text-sm font-medium text-gray-700 mb-3">Search Categories</label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 group-focus-within:text-primary-500 transition-colors duration-200" />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full h-12 pl-12 pr-4 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 text-gray-900 placeholder-gray-400 focus:placeholder-gray-300 font-medium"
-                placeholder="Search by name, description..."
-              />
-            </div>
-          </div>
-
-          {/* Filters Section */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
-            {/* Sort Filter */}
-            <div className="min-w-0">
-              <label className="block text-sm font-medium text-gray-700 mb-3">Sort By</label>
-              <div className="relative group">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="custom-select w-full sm:w-40 h-12 px-4 pr-10 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 font-medium text-gray-900 appearance-none cursor-pointer"
-                >
-                  <option value="name">Name</option>
-                  <option value="created_at">Date Created</option>
-                  <option value="id">ID</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-500 group-focus-within:text-primary-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* View Mode Toggle */}
-            <div className="flex flex-col items-start">
-              <label className="block text-sm font-medium text-gray-700 mb-3">View Mode</label>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
-                    viewMode === 'grid'
-                      ? 'bg-gray-900 text-white shadow-lg'
-                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
-                  }`}
-                  title="Grid View"
-                >
-                  <Squares2X2Icon className="h-4 w-4 mr-2" />
-                  Grid
-                </button>
-                <button
-                  onClick={() => setViewMode('table')}
-                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
-                    viewMode === 'table'
-                      ? 'bg-gray-900 text-white shadow-lg'
-                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
-                  }`}
-                  title="Table View"
-                >
-                  <ListBulletIcon className="h-4 w-4 mr-2" />
-                  List
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
+      <SearchFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search by name, description..."
+        showViewToggle={true}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        filters={[
+          {
+            label: "Sort By",
+            value: sortBy,
+            options: [
+              { value: "name", label: "Name" },
+              { value: "created_at", label: "Date Created" },
+              { value: "id", label: "ID" },
+            ],
+            onChange: (value) => setSortBy(value as SortOption),
+          },
+        ]}
+      />
 
       {/* Categories Display */}
       {filteredCategories.length === 0 ? (

@@ -5,15 +5,15 @@ import api from '../../services/api';
 import Button from '../../components/common/Button';
 import Card from '../../components/common/Card';
 import Spinner from '../../components/common/Spinner';
+import PageHeader from '../../components/common/PageHeader';
+import StatsGrid from '../../components/common/StatsGrid';
+import SearchFilterBar from '../../components/common/SearchFilterBar';
 import {
   PlusIcon,
   DocumentTextIcon,
   EyeIcon,
   PrinterIcon,
-  MagnifyingGlassIcon,
   CalendarIcon,
-  Squares2X2Icon,
-  ListBulletIcon,
   PencilIcon,
   TrashIcon,
   CurrencyRupeeIcon,
@@ -110,10 +110,30 @@ const InvoicesPage: React.FC = () => {
     const pendingInvoices = invoices.filter(inv => inv.payment_status === 'pending').length;
 
     return [
-      { title: 'Total Invoices', value: invoices.length, color: 'primary' },
-      { title: 'Total Revenue', value: `₹${totalAmount.toLocaleString()}`, color: 'gold' },
-      { title: 'Completed', value: completedInvoices, color: 'success' },
-      { title: 'Pending', value: pendingInvoices, color: 'warning' },
+      {
+        name: 'Total Invoices',
+        value: invoices.length,
+        icon: DocumentTextIcon,
+        bgColor: 'bg-gradient-to-br from-blue-600 to-blue-700',
+      },
+      {
+        name: 'Total Revenue',
+        value: `₹${totalAmount.toLocaleString()}`,
+        icon: CurrencyRupeeIcon,
+        bgColor: 'bg-gradient-to-br from-amber-500 to-amber-600',
+      },
+      {
+        name: 'Completed',
+        value: completedInvoices,
+        icon: EyeIcon,
+        bgColor: 'bg-gradient-to-br from-green-500 to-green-600',
+      },
+      {
+        name: 'Pending',
+        value: pendingInvoices,
+        icon: CalendarIcon,
+        bgColor: 'bg-gradient-to-br from-orange-500 to-orange-600',
+      },
     ];
   };
 
@@ -211,50 +231,13 @@ const InvoicesPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Header */}
-      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-display font-bold mb-2 text-gray-800 text-contrast">Invoices & Sales Management ✨</h1>
-            <p className="text-gray-700 text-lg font-medium">
-              Track sales, manage invoices, and monitor payment status. {invoices.length} invoices currently in system.
-            </p>
-          </div>
-          <div className="hidden lg:block">
-            <DocumentTextIcon className="h-16 w-16 text-primary-500 animate-float" />
-          </div>
-        </div>
-      </Card>
+      <PageHeader
+        title="Invoices & Sales Management ✨"
+        description={`Track sales, manage invoices, and monitor payment status. ${invoices.length} invoices currently in system.`}
+        icon={DocumentTextIcon}
+      />
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((stat, index) => (
-          <Card key={index} padding="md" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className={`flex items-center justify-center w-12 h-12 rounded-2xl text-white shadow-lg ${
-                  stat.color === 'primary' ? 'bg-gradient-to-br from-blue-600 to-blue-700' :
-                  stat.color === 'gold' ? 'bg-gradient-to-br from-amber-500 to-amber-600' :
-                  stat.color === 'success' ? 'bg-gradient-to-br from-green-500 to-green-600' :
-                  'bg-gradient-to-br from-orange-500 to-orange-600'
-                }`}>
-                  {stat.color === 'primary' && <DocumentTextIcon className="h-6 w-6" />}
-                  {stat.color === 'gold' && <CurrencyRupeeIcon className="h-6 w-6" />}
-                  {stat.color === 'success' && <EyeIcon className="h-6 w-6" />}
-                  {stat.color === 'warning' && <CalendarIcon className="h-6 w-6" />}
-                </div>
-                <div>
-                  <dl className="flex-1 flex flex-col justify-center">
-                    <dt className="text-sm font-semibold text-gray-600 truncate">{stat.title}</dt>
-                    <dd className="flex items-baseline">
-                      <div className="text-2xl font-bold text-gray-800 text-contrast">{stat.value}</div>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <StatsGrid stats={statsCards} />
 
       {/* Header Actions */}
       <Card padding="md" className="bg-gradient-to-r from-white to-gray-50/50">
@@ -281,105 +264,40 @@ const InvoicesPage: React.FC = () => {
         </div>
       </Card>
 
-      {/* Search and Filters */}
-      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
-        <div className="flex flex-col lg:flex-row lg:items-end gap-6">
-          {/* Search Section */}
-          <div className="flex-1 min-w-0">
-            <label className="block text-sm font-medium text-gray-700 mb-3">Search Invoices</label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 group-focus-within:text-primary-500 transition-colors duration-200" />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full h-12 pl-12 pr-4 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 text-gray-900 placeholder-gray-400 focus:placeholder-gray-300 font-medium"
-                placeholder="Search by invoice number, customer name..."
-              />
-            </div>
-          </div>
-
-          {/* Filters Section */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
-            {/* Status Filter */}
-            <div className="min-w-0">
-              <label className="block text-sm font-medium text-gray-700 mb-3">Status</label>
-              <div className="relative group">
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
-                  className="custom-select w-full sm:w-40 h-12 px-4 pr-10 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 font-medium text-gray-900 appearance-none cursor-pointer"
-                >
-                  <option value="all">All Status</option>
-                  <option value="completed">Completed</option>
-                  <option value="pending">Pending</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-500 group-focus-within:text-primary-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Date Range Filter */}
-            <div className="min-w-0">
-              <label className="block text-sm font-medium text-gray-700 mb-3">Date Range</label>
-              <div className="relative group">
-                <select
-                  value={dateFilter}
-                  onChange={(e) => setDateFilter(e.target.value)}
-                  className="custom-select w-full sm:w-40 h-12 px-4 pr-10 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 font-medium text-gray-900 appearance-none cursor-pointer"
-                >
-                  <option value="all">All Time</option>
-                  <option value="today">Today</option>
-                  <option value="week">This Week</option>
-                  <option value="month">This Month</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-500 group-focus-within:text-primary-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* View Mode Toggle */}
-            <div className="flex flex-col items-start">
-              <label className="block text-sm font-medium text-gray-700 mb-3">View Mode</label>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
-                    viewMode === 'grid'
-                      ? 'bg-gray-900 text-white shadow-lg'
-                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
-                  }`}
-                  title="Grid View"
-                >
-                  <Squares2X2Icon className="h-4 w-4 mr-2" />
-                  Grid
-                </button>
-                <button
-                  onClick={() => setViewMode('table')}
-                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
-                    viewMode === 'table'
-                      ? 'bg-gray-900 text-white shadow-lg'
-                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
-                  }`}
-                  title="Table View"
-                >
-                  <ListBulletIcon className="h-4 w-4 mr-2" />
-                  List
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
+      <SearchFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search by invoice number, customer name..."
+        showViewToggle={true}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        filters={[
+          {
+            label: 'Status',
+            value: statusFilter,
+            options: [
+              { value: 'all', label: 'All Status' },
+              { value: 'completed', label: 'Completed' },
+              { value: 'pending', label: 'Pending' },
+              { value: 'cancelled', label: 'Cancelled' },
+            ],
+            onChange: (value) => setStatusFilter(value as FilterStatus),
+            width: 'w-40'
+          },
+          {
+            label: 'Date Range',
+            value: dateFilter,
+            options: [
+              { value: 'all', label: 'All Time' },
+              { value: 'today', label: 'Today' },
+              { value: 'week', label: 'This Week' },
+              { value: 'month', label: 'This Month' },
+            ],
+            onChange: setDateFilter,
+            width: 'w-40'
+          }
+        ]}
+      />
 
       {/* Invoices List */}
       {filteredInvoices.length === 0 ? (

@@ -7,10 +7,12 @@ import ProductCard from '../../components/common/ProductCard';
 import FormModal from '../../components/common/FormModal';
 import ProductForm from '../../components/forms/ProductForm';
 import Spinner from '../../components/common/Spinner';
+import PageHeader from '../../components/common/PageHeader';
+import StatsGrid from '../../components/common/StatsGrid';
+import SearchFilterBar from '../../components/common/SearchFilterBar';
+import AlertCard from '../../components/common/AlertCard';
 import {
   PlusIcon,
-  Squares2X2Icon,
-  ListBulletIcon,
   ArrowDownTrayIcon,
   MagnifyingGlassIcon,
   SparklesIcon,
@@ -184,44 +186,14 @@ const ProductsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-display font-bold mb-2 text-gray-800 text-contrast">Product Inventory ✨</h1>
-            <p className="text-gray-700 text-lg font-medium">
-              Manage your jewelry collection with ease. {products.length} products currently in inventory.
-            </p>
-          </div>
-          <div className="hidden lg:block">
-            <SparklesIcon className="h-16 w-16 text-primary-500 animate-float" />
-          </div>
-        </div>
-      </Card>
+      <PageHeader
+        title="Product Inventory ✨"
+        description={`Manage your jewelry collection with ease. ${products.length} products currently in inventory.`}
+        icon={SparklesIcon}
+      />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((stat, index) => (
-          <Card key={index} hover className="relative overflow-hidden card-hover group">
-            <div className="p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className={`${stat.bgColor} p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                    <stat.icon className="h-6 w-6 text-white drop-shadow-sm" />
-                  </div>
-                </div>
-                <div className="ml-4 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-semibold text-gray-600 truncate">{stat.name}</dt>
-                    <dd className="flex items-baseline">
-                      <div className="text-2xl font-bold text-gray-800 text-contrast">{stat.value}</div>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <StatsGrid stats={statsCards} />
 
       {/* Header Actions */}
       <Card padding="md" className="bg-gradient-to-r from-white to-gray-50/50">
@@ -253,144 +225,59 @@ const ProductsPage: React.FC = () => {
       </Card>
 
       {/* Search and Filters */}
-      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
-        <div className="flex flex-col lg:flex-row lg:items-end gap-6">
-          {/* Search Section */}
-          <div className="flex-1 min-w-0">
-            <label className="block text-sm font-medium text-gray-700 mb-3">Search Products</label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 group-focus-within:text-primary-500 transition-colors duration-200" />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full h-12 pl-12 pr-4 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 text-gray-900 placeholder-gray-400 focus:placeholder-gray-300 font-medium"
-                placeholder="Search by name, barcode, category..."
-              />
-            </div>
-          </div>
+      <SearchFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search by name, barcode, category..."
+        showViewToggle={true}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        filters={[
+          {
+            label: "Category",
+            value: filterCategory,
+            options: [
+              { value: "all", label: "All Categories" },
+              ...categories.map(category => ({ value: category || '', label: category || '' }))
+            ],
+            onChange: setFilterCategory,
+          },
+          {
+            label: "Sort By",
+            value: sortBy,
+            options: [
+              { value: "name", label: "Name" },
+              { value: "price", label: "Price" },
+              { value: "category", label: "Category" },
+              { value: "stock", label: "Stock" },
+              { value: "created_at", label: "Date" },
+            ],
+            onChange: (value) => setSortBy(value as SortOption),
+          },
+        ]}
+      />
 
-          {/* Filters Section */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
-            {/* Category Filter */}
-            <div className="min-w-0">
-              <label className="block text-sm font-medium text-gray-700 mb-3">Category</label>
-              <div className="relative group">
-                <select
-                  value={filterCategory}
-                  onChange={(e) => setFilterCategory(e.target.value)}
-                  className="custom-select w-full sm:w-40 h-12 px-4 pr-10 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 font-medium text-gray-900 appearance-none cursor-pointer"
-                >
-                  <option value="all">All Categories</option>
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-500 group-focus-within:text-primary-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Sort Filter */}
-            <div className="min-w-0">
-              <label className="block text-sm font-medium text-gray-700 mb-3">Sort By</label>
-              <div className="relative group">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="custom-select w-full sm:w-40 h-12 px-4 pr-10 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 font-medium text-gray-900 appearance-none cursor-pointer"
-                >
-                  <option value="name">Name</option>
-                  <option value="price">Price</option>
-                  <option value="category">Category</option>
-                  <option value="stock">Stock</option>
-                  <option value="created_at">Date</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-500 group-focus-within:text-primary-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* View Mode Toggle */}
-            <div className="flex flex-col items-start">
-              <label className="block text-sm font-medium text-gray-700 mb-3">View Mode</label>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
-                    viewMode === 'grid'
-                      ? 'bg-gray-900 text-white shadow-lg'
-                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
-                  }`}
-                  title="Grid View"
-                >
-                  <Squares2X2Icon className="h-4 w-4 mr-2" />
-                  Grid
-                </button>
-                <button
-                  onClick={() => setViewMode('table')}
-                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
-                    viewMode === 'table'
-                      ? 'bg-gray-900 text-white shadow-lg'
-                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
-                  }`}
-                  title="Table View"
-                >
-                  <ListBulletIcon className="h-4 w-4 mr-2" />
-                  List
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Low Stock Alert - Similar to Dashboard */}
+      {/* Alerts */}
       {products.length > 0 && products.filter(p => p.quantity <= p.min_stock_level).length > 0 && (
-        <Card padding="md" className="border-l-4 border-yellow-500 bg-yellow-50">
-          <div className="flex items-center">
-            <ExclamationTriangleIcon className="h-6 w-6 text-yellow-600" />
-            <div className="ml-3 flex-1">
-              <h3 className="text-sm font-medium text-yellow-800">
-                Low Stock Alert
-              </h3>
-              <p className="text-sm text-yellow-700 mt-1">
-                {products.filter(p => p.quantity <= p.min_stock_level).length} product{products.filter(p => p.quantity <= p.min_stock_level).length !== 1 ? 's' : ''} running low on stock. 
-                <span className="font-medium underline hover:text-yellow-900 ml-1 cursor-pointer">
-                  Review inventory to restock items.
-                </span>
-              </p>
-            </div>
-          </div>
-        </Card>
+        <AlertCard
+          type="warning"
+          title="Low Stock Alert"
+          message={`${products.filter(p => p.quantity <= p.min_stock_level).length} product${products.filter(p => p.quantity <= p.min_stock_level).length !== 1 ? 's' : ''} running low on stock.`}
+          icon={ExclamationTriangleIcon}
+          actionText="Review inventory to restock items."
+          onActionClick={() => {/* Add navigation to low stock filter */}}
+        />
       )}
 
-      {/* Out of Stock Alert */}
       {products.length > 0 && products.filter(p => p.quantity === 0).length > 0 && (
-        <Card padding="md" className="border-l-4 border-red-500 bg-red-50">
-          <div className="flex items-center">
-            <XCircleIcon className="h-6 w-6 text-red-600" />
-            <div className="ml-3 flex-1">
-              <h3 className="text-sm font-medium text-red-800">
-                Out of Stock Alert
-              </h3>
-              <p className="text-sm text-red-700 mt-1">
-                {products.filter(p => p.quantity === 0).length} product{products.filter(p => p.quantity === 0).length !== 1 ? 's' : ''} completely out of stock. 
-                <span className="font-medium underline hover:text-red-900 ml-1 cursor-pointer">
-                  Immediate restocking required.
-                </span>
-              </p>
-            </div>
-          </div>
-        </Card>
+        <AlertCard
+          type="error"
+          title="Out of Stock Alert"
+          message={`${products.filter(p => p.quantity === 0).length} product${products.filter(p => p.quantity === 0).length !== 1 ? 's' : ''} completely out of stock.`}
+          icon={XCircleIcon}
+          actionText="Immediate restocking required."
+          onActionClick={() => {/* Add navigation to out of stock filter */}}
+        />
       )}
 
       {/* Products Display */}
