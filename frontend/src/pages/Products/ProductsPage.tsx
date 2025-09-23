@@ -4,7 +4,7 @@ import api from '../../services/api';
 import Button from '../../components/common/Button';
 import Card from '../../components/common/Card';
 import ProductCard from '../../components/common/ProductCard';
-import Modal from '../../components/common/Modal';
+import FormModal from '../../components/common/FormModal';
 import ProductForm from '../../components/forms/ProductForm';
 import Spinner from '../../components/common/Spinner';
 import {
@@ -24,6 +24,11 @@ const ProductsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
+
+  // Debug modal state
+  React.useEffect(() => {
+    console.log('Modal state changed:', isModalOpen);
+  }, [isModalOpen]);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('name');
@@ -181,7 +186,10 @@ const ProductsPage: React.FC = () => {
             <Button
               variant="gold"
               icon={<PlusIcon className="h-4 w-4" />}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                console.log('Add Product clicked, setting modal to open');
+                setIsModalOpen(true);
+              }}
             >
               Add Product
             </Button>
@@ -352,13 +360,15 @@ const ProductsPage: React.FC = () => {
       )}
 
       {/* Product Form Modal */}
-      <Modal
+      <FormModal
         isOpen={isModalOpen}
         onClose={() => {
+          console.log('Modal onClose called');
           setIsModalOpen(false);
           setSelectedProduct(undefined);
         }}
         title={selectedProduct ? 'Edit Product' : 'Add New Product'}
+        size="xl"
       >
         <ProductForm
           product={selectedProduct}
@@ -368,7 +378,7 @@ const ProductsPage: React.FC = () => {
             setSelectedProduct(undefined);
           }}
         />
-      </Modal>
+      </FormModal>
     </div>
   );
 };

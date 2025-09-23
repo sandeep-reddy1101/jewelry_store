@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
+import Spinner from '../../components/common/Spinner';
 import {
   SparklesIcon,
   DocumentTextIcon,
@@ -142,8 +143,9 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="flex flex-col items-center justify-center h-64 space-y-4">
+        <Spinner size="lg" />
+        <p className="text-gray-600 font-medium">Loading dashboard data...</p>
       </div>
     );
   }
@@ -151,16 +153,16 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <Card padding="lg" className="bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-primary-200">
+      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-display font-bold mb-2 text-gray-900">Welcome back! ✨</h1>
-            <p className="text-gray-600 text-lg">
+            <h1 className="text-3xl font-display font-bold mb-2 text-gray-800 text-contrast">Welcome back! ✨</h1>
+            <p className="text-gray-700 text-lg font-medium">
               Here's what's happening at your jewelry store today.
             </p>
           </div>
           <div className="hidden lg:block">
-            <SparklesIcon className="h-16 w-16 text-primary-400" />
+            <SparklesIcon className="h-16 w-16 text-primary-500 animate-float" />
           </div>
         </div>
       </Card>
@@ -168,22 +170,22 @@ const Dashboard: React.FC = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((stat, index) => (
-          <Card key={index} hover className="relative overflow-hidden">
+          <Card key={index} hover className="relative overflow-hidden card-hover group">
             <div className="p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className={`${stat.bgColor} p-3 rounded-lg`}>
-                    <stat.icon className="h-6 w-6 text-white" />
+                  <div className={`${stat.bgColor} p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300`}>
+                    <stat.icon className="h-6 w-6 text-white drop-shadow-sm" />
                   </div>
                 </div>
                 <div className="ml-4 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">{stat.name}</dt>
+                    <dt className="text-sm font-semibold text-gray-600 truncate">{stat.name}</dt>
                     <dd className="flex items-baseline">
-                      <div className="text-2xl font-semibold text-gray-900">{stat.value}</div>
+                      <div className="text-2xl font-bold text-gray-800 text-contrast">{stat.value}</div>
                       {stat.trend && (
-                        <div className={`ml-2 flex items-baseline text-sm font-semibold ${
-                          stat.trend.isPositive ? 'text-green-600' : 'text-red-600'
+                        <div className={`ml-2 flex items-baseline text-sm font-bold ${
+                          stat.trend.isPositive ? 'text-success-600' : 'text-danger-600'
                         }`}>
                           {stat.trend.isPositive ? (
                             <ArrowTrendingUpIcon className="h-4 w-4 flex-shrink-0 self-center" />

@@ -19,11 +19,11 @@ const Header: React.FC<HeaderProps> = ({ title, onSearch, showSearch = false }) 
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 shadow-soft">
+    <header className="bg-white/80 backdrop-blur-md border-b border-white/20 shadow-modern">
       <div className="flex items-center justify-between h-16 px-6">
         {/* Left section - Title and Search */}
         <div className="flex items-center space-x-6">
-          <h1 className="text-2xl font-display font-semibold text-gray-900">{title}</h1>
+          <h1 className="text-2xl font-display font-bold text-gray-800 text-contrast">{title}</h1>
           
           {showSearch && (
             <div className="hidden md:flex items-center">
@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ title, onSearch, showSearch = false }) 
                   type="text"
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="block w-80 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm transition-all duration-200"
+                  className="block w-80 pl-10 pr-3 py-2 border-0 rounded-xl leading-5 bg-white/60 backdrop-blur-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:bg-white text-sm transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg text-gray-800"
                   placeholder="Search products, invoices, customers..."
                 />
               </div>
@@ -47,11 +47,11 @@ const Header: React.FC<HeaderProps> = ({ title, onSearch, showSearch = false }) 
         <div className="flex items-center space-x-4">
           {/* Quick Actions */}
           <div className="hidden lg:flex items-center space-x-2">
-            <span className="text-sm text-gray-500">Quick:</span>
-            <button className="px-3 py-1 text-xs bg-jewelry-gold text-white rounded-full hover:bg-jewelry-gold-dark transition-colors duration-200">
+            <span className="text-sm text-gray-600 font-medium">Quick:</span>
+            <button className="px-3 py-1 text-xs bg-jewelry-gold text-gray-900 font-semibold rounded-full hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105">
               New Sale
             </button>
-            <button className="px-3 py-1 text-xs bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors duration-200">
+            <button className="px-3 py-1 text-xs bg-modern-primary text-white font-semibold rounded-full hover:shadow-glow-primary transition-all duration-300 transform hover:scale-105">
               Add Product
             </button>
           </div>

@@ -17,7 +17,7 @@ const Card: React.FC<CardProps> = ({
   hover = false,
   bordered = true,
 }) => {
-  const baseClasses = 'bg-white rounded-xl transition-all duration-200';
+  const baseClasses = 'bg-white/90 backdrop-blur-sm rounded-2xl transition-all duration-300 relative overflow-hidden';
   
   const paddingClasses = {
     none: '',
@@ -29,19 +29,25 @@ const Card: React.FC<CardProps> = ({
   const shadowClasses = {
     none: '',
     sm: 'shadow-sm',
-    md: 'shadow-soft',
-    lg: 'shadow-lg',
-    elegant: 'shadow-elegant',
+    md: 'shadow-modern',
+    lg: 'shadow-elegant',
+    elegant: 'shadow-glass',
   };
 
-  const hoverClasses = hover ? 'hover:shadow-elegant hover:scale-102 cursor-pointer' : '';
-  const borderClasses = bordered ? 'border border-gray-100' : '';
+  const hoverClasses = hover ? 'hover:shadow-elegant hover:scale-[1.02] hover:bg-white/95 cursor-pointer hover:-translate-y-1' : '';
+  const borderClasses = bordered ? 'border border-white/20' : '';
 
   return (
     <div
       className={`${baseClasses} ${paddingClasses[padding]} ${shadowClasses[shadow]} ${hoverClasses} ${borderClasses} ${className}`}
     >
-      {children}
+      {/* Glass morphism overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none"></div>
+      
+      {/* Content */}
+      <div className="relative z-10">
+        {children}
+      </div>
     </div>
   );
 };

@@ -3,6 +3,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.vendors import router as vendors_router
 from app.api.product_categories import router as product_categories_router
+from app.api.product_types import router as product_types_router
+from app.api.weight_units import router as weight_units_router
 from app.api.products import router as products_router
 from app.api.invoices import router as invoices_router
 from app.api.invoice_items import router as invoice_items_router
@@ -44,6 +46,8 @@ app.add_middleware(
 # Include Routers
 app.include_router(vendors_router)
 app.include_router(product_categories_router)
+app.include_router(product_types_router)
+app.include_router(weight_units_router)
 app.include_router(products_router)
 app.include_router(invoices_router)
 app.include_router(invoice_items_router)

@@ -29,14 +29,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const showSearchBar = ['/products', '/invoices', '/vendors', '/employees'].includes(location.pathname);
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
           title={getPageTitle(location.pathname)} 
           showSearch={showSearchBar}
         />
-        <main className="flex-1 overflow-auto bg-gray-50">
+        <main className="flex-1 overflow-auto">
           <div className="p-6 animate-fade-in">
             {children}
           </div>

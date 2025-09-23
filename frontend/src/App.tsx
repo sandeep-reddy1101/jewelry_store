@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './components/layouts/MainLayout';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ProductsPage from './pages/Products/ProductsPage';
+import VendorsPage from './pages/Vendors/VendorsPage';
+import CategoriesPage from './pages/Categories/CategoriesPage';
 import InvoicesPage from './pages/Invoices/InvoicesPage';
 import NewInvoicePage from './pages/Invoices/NewInvoicePage';
 import './App.css';
@@ -13,8 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
-          <Route path="/categories" element={<div>Categories</div>} />
-          <Route path="/vendors" element={<div>Vendors</div>} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/vendors" element={<VendorsPage />} />
           <Route path="/invoices" element={<InvoicesPage />} />
           <Route path="/invoices/new" element={<NewInvoicePage />} />
           <Route path="/employees" element={<div>Employees</div>} />

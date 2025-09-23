@@ -18,15 +18,15 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:transform-none disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'inline-flex items-center justify-center rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:transform-none disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden';
   
   const variantClasses = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-lg hover:shadow-xl',
-    secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 shadow-lg hover:shadow-xl',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-lg hover:shadow-xl',
-    success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 shadow-lg hover:shadow-xl',
-    gold: 'bg-gradient-to-r from-jewelry-gold to-jewelry-gold-dark text-white hover:from-jewelry-gold-dark hover:to-jewelry-gold focus:ring-jewelry-gold shadow-lg hover:shadow-xl',
-    outline: 'border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white focus:ring-primary-500 bg-white shadow-soft hover:shadow-lg',
+    primary: 'bg-modern-primary text-white hover:shadow-glow-primary focus:ring-primary-400 shadow-modern hover:shadow-elegant font-semibold',
+    secondary: 'bg-modern-secondary text-white hover:shadow-modern focus:ring-secondary-400 shadow-soft hover:shadow-elegant font-medium',
+    danger: 'bg-modern-danger text-white hover:shadow-modern focus:ring-danger-400 shadow-soft hover:shadow-elegant font-medium',
+    success: 'bg-modern-success text-white hover:shadow-modern focus:ring-success-400 shadow-soft hover:shadow-elegant font-medium',
+    gold: 'bg-jewelry-gold text-gray-900 hover:shadow-glow-gold focus:ring-jewelry-gold-accent shadow-modern hover:shadow-elegant font-semibold',
+    outline: 'border-2 border-primary-500 text-primary-600 hover:bg-primary-500 hover:text-white focus:ring-primary-400 bg-white/80 backdrop-blur-sm shadow-soft hover:shadow-modern font-medium',
   };
 
   const sizeClasses = {
