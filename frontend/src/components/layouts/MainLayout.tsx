@@ -27,7 +27,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     return routes[pathname] || STORE_DISPLAY.systemName;
   };
 
-  const showSearchBar = ['/products', '/invoices', '/vendors', '/employees'].includes(location.pathname);
+
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
@@ -35,7 +35,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
           title={getPageTitle(location.pathname)} 
-          showSearch={showSearchBar}
         />
         <main className="flex-1 overflow-auto">
           <div className="p-6 animate-fade-in">
