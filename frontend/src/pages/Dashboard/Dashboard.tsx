@@ -14,6 +14,7 @@ import {
   BanknotesIcon,
 } from '@heroicons/react/24/outline';
 import api from '../../services/api';
+import { STORE_DISPLAY } from '../../config/store';
 
 interface DashboardStats {
   totalProducts: number;
@@ -112,7 +113,7 @@ const Dashboard: React.FC = () => {
       value: stats.totalProducts,
       icon: SparklesIcon,
       color: 'primary',
-      bgColor: 'bg-primary-500',
+      bgColor: 'bg-gradient-to-br from-blue-600 to-blue-700',
       trend: null,
     },
     {
@@ -120,7 +121,7 @@ const Dashboard: React.FC = () => {
       value: `₹${stats.totalRevenue.toLocaleString()}`,
       icon: BanknotesIcon,
       color: 'gold',
-      bgColor: 'bg-jewelry-gold',
+      bgColor: 'bg-gradient-to-br from-amber-500 to-amber-600',
       trend: { value: stats.revenueGrowth, isPositive: true },
     },
     {
@@ -128,7 +129,7 @@ const Dashboard: React.FC = () => {
       value: stats.totalInvoices,
       icon: DocumentTextIcon,
       color: 'success',
-      bgColor: 'bg-green-500',
+      bgColor: 'bg-gradient-to-br from-green-500 to-green-600',
       trend: { value: stats.salesGrowth, isPositive: true },
     },
     {
@@ -136,7 +137,7 @@ const Dashboard: React.FC = () => {
       value: stats.lowStockItems,
       icon: ExclamationTriangleIcon,
       color: 'danger',
-      bgColor: 'bg-red-500',
+      bgColor: 'bg-gradient-to-br from-red-500 to-red-600',
       trend: null,
     },
   ];
@@ -158,7 +159,7 @@ const Dashboard: React.FC = () => {
           <div>
             <h1 className="text-3xl font-display font-bold mb-2 text-gray-800 text-contrast">Welcome back! ✨</h1>
             <p className="text-gray-700 text-lg font-medium">
-              Here's what's happening at your jewelry store today.
+              Here's what's happening at {STORE_DISPLAY.brandName} today.
             </p>
           </div>
           <div className="hidden lg:block">

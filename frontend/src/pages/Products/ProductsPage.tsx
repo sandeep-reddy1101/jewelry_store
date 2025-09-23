@@ -13,6 +13,10 @@ import {
   ListBulletIcon,
   ArrowDownTrayIcon,
   MagnifyingGlassIcon,
+  SparklesIcon,
+  BanknotesIcon,
+  ExclamationTriangleIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
 
 type ViewMode = 'grid' | 'table';
@@ -135,10 +139,34 @@ const ProductsPage: React.FC = () => {
     const outOfStockItems = products.filter(p => p.quantity === 0).length;
 
     return [
-      { title: 'Total Products', value: totalProducts, color: 'primary' },
-      { title: 'Total Value', value: `₹${totalValue.toLocaleString()}`, color: 'gold' },
-      { title: 'Low Stock', value: lowStockItems, color: 'yellow' },
-      { title: 'Out of Stock', value: outOfStockItems, color: 'red' },
+      {
+        name: 'Total Products',
+        value: totalProducts,
+        icon: SparklesIcon,
+        color: 'primary',
+        bgColor: 'bg-gradient-to-br from-blue-600 to-blue-700',
+      },
+      {
+        name: 'Total Value',
+        value: `₹${totalValue.toLocaleString()}`,
+        icon: BanknotesIcon,
+        color: 'gold',
+        bgColor: 'bg-gradient-to-br from-amber-500 to-amber-600',
+      },
+      {
+        name: 'Low Stock',
+        value: lowStockItems,
+        icon: ExclamationTriangleIcon,
+        color: 'yellow',
+        bgColor: 'bg-gradient-to-br from-yellow-500 to-yellow-600',
+      },
+      {
+        name: 'Out of Stock',
+        value: outOfStockItems,
+        icon: XCircleIcon,
+        color: 'red',
+        bgColor: 'bg-gradient-to-br from-red-500 to-red-600',
+      },
     ];
   };
 
@@ -155,113 +183,215 @@ const ProductsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Welcome Header */}
+      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-display font-bold mb-2 text-gray-800 text-contrast">Product Inventory ✨</h1>
+            <p className="text-gray-700 text-lg font-medium">
+              Manage your jewelry collection with ease. {products.length} products currently in inventory.
+            </p>
+          </div>
+          <div className="hidden lg:block">
+            <SparklesIcon className="h-16 w-16 text-primary-500 animate-float" />
+          </div>
+        </div>
+      </Card>
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statsCards.map((stat, index) => (
-          <Card key={index} padding="md" shadow="elegant" className="text-center">
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-gray-600">{stat.title}</h3>
-              <p className={`text-2xl font-bold ${
-                stat.color === 'primary' ? 'text-primary-600' :
-                stat.color === 'gold' ? 'text-jewelry-gold-dark' :
-                stat.color === 'yellow' ? 'text-yellow-600' :
-                'text-red-600'
-              }`}>
-                {stat.value}
-              </p>
+          <Card key={index} hover className="relative overflow-hidden card-hover group">
+            <div className="p-6">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className={`${stat.bgColor} p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300`}>
+                    <stat.icon className="h-6 w-6 text-white drop-shadow-sm" />
+                  </div>
+                </div>
+                <div className="ml-4 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-semibold text-gray-600 truncate">{stat.name}</dt>
+                    <dd className="flex items-baseline">
+                      <div className="text-2xl font-bold text-gray-800 text-contrast">{stat.value}</div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
             </div>
           </Card>
         ))}
       </div>
 
       {/* Header Actions */}
-      <Card padding="md">
+      <Card padding="md" className="bg-gradient-to-r from-white to-gray-50/50">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
           <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-display font-semibold text-gray-900">Products</h1>
-            <span className="text-sm text-gray-500">({filteredProducts.length} items)</span>
+            <h1 className="text-2xl font-display font-semibold text-gray-900">Inventory Management</h1>
+            <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800 min-w-[4rem] text-center">
+              {filteredProducts.length} items
+            </span>
           </div>
 
           <div className="flex items-center space-x-3">
-            <Button
-              variant="gold"
-              icon={<PlusIcon className="h-4 w-4" />}
+            <button
               onClick={() => {
                 console.log('Add Product clicked, setting modal to open');
                 setIsModalOpen(true);
               }}
+              className="inline-flex items-center justify-center px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-blue-600 hover:border-blue-700"
             >
-              Add Product
-            </Button>
+              <PlusIcon className="h-4 w-4 mr-2 text-white" />
+              Add New Product
+            </button>
+            
             <Button variant="outline" icon={<ArrowDownTrayIcon className="h-4 w-4" />}>
-              Export
+              Export Data
             </Button>
           </div>
         </div>
       </Card>
 
       {/* Search and Filters */}
-      <Card padding="md">
-        <div className="flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-6">
-          {/* Search */}
-          <div className="flex-1">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
+        <div className="flex flex-col lg:flex-row lg:items-end gap-6">
+          {/* Search Section */}
+          <div className="flex-1 min-w-0">
+            <label className="block text-sm font-medium text-gray-700 mb-3">Search Products</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 group-focus-within:text-primary-500 transition-colors duration-200" />
               </div>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="Search products..."
+                className="block w-full h-12 pl-12 pr-4 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 text-gray-900 placeholder-gray-400 focus:placeholder-gray-300 font-medium"
+                placeholder="Search by name, barcode, category..."
               />
             </div>
           </div>
 
-          {/* Filters */}
-          <div className="flex items-center space-x-3">
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            >
-              <option value="all">All Categories</option>
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
-              ))}
-            </select>
+          {/* Filters Section */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
+            {/* Category Filter */}
+            <div className="min-w-0">
+              <label className="block text-sm font-medium text-gray-700 mb-3">Category</label>
+              <div className="relative group">
+                <select
+                  value={filterCategory}
+                  onChange={(e) => setFilterCategory(e.target.value)}
+                  className="custom-select w-full sm:w-40 h-12 px-4 pr-10 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 font-medium text-gray-900 appearance-none cursor-pointer"
+                >
+                  <option value="all">All Categories</option>
+                  {categories.map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-500 group-focus-within:text-primary-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
 
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            >
-              <option value="name">Sort by Name</option>
-              <option value="price">Sort by Price</option>
-              <option value="category">Sort by Category</option>
-              <option value="stock">Sort by Stock</option>
-              <option value="created_at">Sort by Date</option>
-            </select>
+            {/* Sort Filter */}
+            <div className="min-w-0">
+              <label className="block text-sm font-medium text-gray-700 mb-3">Sort By</label>
+              <div className="relative group">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className="custom-select w-full sm:w-40 h-12 px-4 pr-10 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 font-medium text-gray-900 appearance-none cursor-pointer"
+                >
+                  <option value="name">Name</option>
+                  <option value="price">Price</option>
+                  <option value="category">Category</option>
+                  <option value="stock">Stock</option>
+                  <option value="created_at">Date</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-500 group-focus-within:text-primary-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
 
             {/* View Mode Toggle */}
-            <div className="flex border border-gray-300 rounded-lg">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 ${viewMode === 'grid' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:bg-gray-100'} rounded-l-lg transition-colors`}
-              >
-                <Squares2X2Icon className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('table')}
-                className={`p-2 ${viewMode === 'table' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:bg-gray-100'} rounded-r-lg transition-colors`}
-              >
-                <ListBulletIcon className="h-4 w-4" />
-              </button>
+            <div className="flex flex-col items-start">
+              <label className="block text-sm font-medium text-gray-700 mb-3">View Mode</label>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
+                    viewMode === 'grid'
+                      ? 'bg-gray-900 text-white shadow-lg'
+                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
+                  }`}
+                  title="Grid View"
+                >
+                  <Squares2X2Icon className="h-4 w-4 mr-2" />
+                  Grid
+                </button>
+                <button
+                  onClick={() => setViewMode('table')}
+                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
+                    viewMode === 'table'
+                      ? 'bg-gray-900 text-white shadow-lg'
+                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
+                  }`}
+                  title="Table View"
+                >
+                  <ListBulletIcon className="h-4 w-4 mr-2" />
+                  List
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </Card>
+
+      {/* Low Stock Alert - Similar to Dashboard */}
+      {products.length > 0 && products.filter(p => p.quantity <= p.min_stock_level).length > 0 && (
+        <Card padding="md" className="border-l-4 border-yellow-500 bg-yellow-50">
+          <div className="flex items-center">
+            <ExclamationTriangleIcon className="h-6 w-6 text-yellow-600" />
+            <div className="ml-3 flex-1">
+              <h3 className="text-sm font-medium text-yellow-800">
+                Low Stock Alert
+              </h3>
+              <p className="text-sm text-yellow-700 mt-1">
+                {products.filter(p => p.quantity <= p.min_stock_level).length} product{products.filter(p => p.quantity <= p.min_stock_level).length !== 1 ? 's' : ''} running low on stock. 
+                <span className="font-medium underline hover:text-yellow-900 ml-1 cursor-pointer">
+                  Review inventory to restock items.
+                </span>
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Out of Stock Alert */}
+      {products.length > 0 && products.filter(p => p.quantity === 0).length > 0 && (
+        <Card padding="md" className="border-l-4 border-red-500 bg-red-50">
+          <div className="flex items-center">
+            <XCircleIcon className="h-6 w-6 text-red-600" />
+            <div className="ml-3 flex-1">
+              <h3 className="text-sm font-medium text-red-800">
+                Out of Stock Alert
+              </h3>
+              <p className="text-sm text-red-700 mt-1">
+                {products.filter(p => p.quantity === 0).length} product{products.filter(p => p.quantity === 0).length !== 1 ? 's' : ''} completely out of stock. 
+                <span className="font-medium underline hover:text-red-900 ml-1 cursor-pointer">
+                  Immediate restocking required.
+                </span>
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* Products Display */}
       {filteredProducts.length === 0 ? (
@@ -269,7 +399,21 @@ const ProductsPage: React.FC = () => {
           <div className="py-12">
             <MagnifyingGlassIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
-            <p className="text-gray-500">Try adjusting your search or filter criteria.</p>
+            <p className="text-gray-500 mb-4">
+              {products.length === 0 
+                ? "You haven't added any products yet. Start building your inventory!" 
+                : "Try adjusting your search or filter criteria."
+              }
+            </p>
+            {products.length === 0 && (
+              <Button
+                variant="gold"
+                icon={<PlusIcon className="h-4 w-4" />}
+                onClick={() => setIsModalOpen(true)}
+              >
+                Add Your First Product
+              </Button>
+            )}
           </div>
         </Card>
       ) : viewMode === 'grid' ? (

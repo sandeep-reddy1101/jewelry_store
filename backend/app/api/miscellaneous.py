@@ -10,7 +10,7 @@ def health_check():
 def get_settings():
     # Placeholder for application settings
     settings = {
-        "app_name": "Jewelry Store Backend",
+        "app_name": "Vasudha Jewelry Store Backend",
         "version": "1.0.0",
         "environment": "development"
     }

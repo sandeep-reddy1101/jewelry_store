@@ -13,7 +13,13 @@ import {
   TrashIcon,
   MagnifyingGlassIcon,
   SparklesIcon,
+  ArrowDownTrayIcon,
+  Squares2X2Icon,
+  ListBulletIcon,
 } from '@heroicons/react/24/outline';
+
+type ViewMode = 'grid' | 'table';
+type SortOption = 'name' | 'created_at' | 'id';
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<ProductCategory[]>([]);
@@ -22,14 +28,16 @@ const CategoriesPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | undefined>();
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [sortBy, setSortBy] = useState<SortOption>('name');
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
   useEffect(() => {
-    filterCategories();
-  }, [categories, searchQuery]);
+    filterAndSortCategories();
+  }, [categories, searchQuery, sortBy]);
 
   const fetchCategories = async () => {
     try {
@@ -42,7 +50,7 @@ const CategoriesPage: React.FC = () => {
     }
   };
 
-  const filterCategories = () => {
+  const filterAndSortCategories = () => {
     let filtered = [...categories];
 
     // Search filter
@@ -52,6 +60,20 @@ const CategoriesPage: React.FC = () => {
         category.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'created_at':
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case 'id':
+          return b.id - a.id;
+        default:
+          return 0;
+      }
+    });
 
     setFilteredCategories(filtered);
   };
@@ -104,12 +126,35 @@ const CategoriesPage: React.FC = () => {
       'from-purple-500 to-purple-600',
       'from-blue-500 to-blue-600', 
       'from-green-500 to-green-600',
-      'from-yellow-500 to-yellow-600',
+      'from-amber-500 to-amber-600',
       'from-pink-500 to-pink-600',
       'from-indigo-500 to-indigo-600',
       'from-red-500 to-red-600',
+      'from-teal-500 to-teal-600',
     ];
     return colors[index % colors.length];
+  };
+
+  const getStatsCards = () => {
+    const totalCategories = categories.length;
+    const activeCategories = categories.filter(c => c.name && c.description).length;
+
+    return [
+      {
+        name: 'Total Categories',
+        value: totalCategories,
+        icon: TagIcon,
+        color: 'primary',
+        bgColor: 'bg-gradient-to-br from-blue-600 to-blue-700',
+      },
+      {
+        name: 'Active Categories',
+        value: activeCategories,
+        icon: SparklesIcon,
+        color: 'success',
+        bgColor: 'bg-gradient-to-br from-green-500 to-green-600',
+      },
+    ];
   };
 
   if (loading) {
@@ -120,86 +165,203 @@ const CategoriesPage: React.FC = () => {
     );
   }
 
+  const statsCards = getStatsCards();
+
   return (
     <div className="space-y-6">
-      {/* Stats Card */}
-      <Card padding="md" shadow="elegant" className="text-center">
-        <div className="space-y-2">
-          <h3 className="text-sm font-medium text-gray-600">Total Categories</h3>
-          <p className="text-2xl font-bold text-purple-600">{categories.length}</p>
+      {/* Welcome Header */}
+      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-display font-bold mb-2 text-gray-800 text-contrast">Product Categories ✨</h1>
+            <p className="text-gray-700 text-lg font-medium">
+              Organize your jewelry collection efficiently. {categories.length} categories available to classify your products.
+            </p>
+          </div>
+          <div className="hidden lg:block">
+            <TagIcon className="h-16 w-16 text-primary-500 animate-float" />
+          </div>
         </div>
       </Card>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {statsCards.map((stat, index) => (
+          <Card key={index} hover className="relative overflow-hidden card-hover group">
+            <div className="p-6">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className={`${stat.bgColor} p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300`}>
+                    <stat.icon className="h-6 w-6 text-white drop-shadow-sm" />
+                  </div>
+                </div>
+                <div className="ml-4 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-semibold text-gray-600 truncate">{stat.name}</dt>
+                    <dd className="flex items-baseline">
+                      <div className="text-2xl font-bold text-gray-800 text-contrast">{stat.value}</div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
 
       {/* Header Actions */}
-      <Card padding="md">
+      <Card padding="md" className="bg-gradient-to-r from-white to-gray-50/50">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
           <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-display font-semibold text-gray-900">Product Categories</h1>
-            <span className="text-sm text-gray-500">({filteredCategories.length} categories)</span>
+            <h1 className="text-2xl font-display font-semibold text-gray-900">Category Management</h1>
+            <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800 min-w-[4rem] text-center">
+              {filteredCategories.length} items
+            </span>
           </div>
 
-          <Button
-            variant="primary"
-            icon={<PlusIcon className="h-4 w-4" />}
-            onClick={() => setIsModalOpen(true)}
-          >
-            Add Category
-          </Button>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex items-center justify-center px-4 py-2 h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-blue-600 hover:border-blue-700"
+            >
+              <PlusIcon className="h-4 w-4 mr-2 text-white" />
+              Add New Category
+            </button>
+            
+            <Button variant="outline" icon={<ArrowDownTrayIcon className="h-4 w-4" />}>
+              Export Data
+            </Button>
+          </div>
         </div>
       </Card>
 
-      {/* Search */}
-      <Card padding="md">
-        <div className="relative max-w-md">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search categories..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+      {/* Search and Filters */}
+      <Card padding="lg" className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30 border-2 border-white/40 shadow-glass">
+        <div className="flex flex-col lg:flex-row lg:items-end gap-6">
+          {/* Search Section */}
+          <div className="flex-1 min-w-0">
+            <label className="block text-sm font-medium text-gray-700 mb-3">Search Categories</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 group-focus-within:text-primary-500 transition-colors duration-200" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full h-12 pl-12 pr-4 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 text-gray-900 placeholder-gray-400 focus:placeholder-gray-300 font-medium"
+                placeholder="Search by name, description..."
+              />
+            </div>
+          </div>
+
+          {/* Filters Section */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
+            {/* Sort Filter */}
+            <div className="min-w-0">
+              <label className="block text-sm font-medium text-gray-700 mb-3">Sort By</label>
+              <div className="relative group">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className="custom-select w-full sm:w-40 h-12 px-4 pr-10 border border-gray-300 rounded-xl focus:ring-0 focus:border-primary-400 focus:shadow-lg focus:shadow-primary-100 bg-white hover:border-gray-400 transition-all duration-200 font-medium text-gray-900 appearance-none cursor-pointer"
+                >
+                  <option value="name">Name</option>
+                  <option value="created_at">Date Created</option>
+                  <option value="id">ID</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400 group-hover:text-primary-500 group-focus-within:text-primary-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* View Mode Toggle */}
+            <div className="flex flex-col items-start">
+              <label className="block text-sm font-medium text-gray-700 mb-3">View Mode</label>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
+                    viewMode === 'grid'
+                      ? 'bg-gray-900 text-white shadow-lg'
+                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
+                  }`}
+                  title="Grid View"
+                >
+                  <Squares2X2Icon className="h-4 w-4 mr-2" />
+                  Grid
+                </button>
+                <button
+                  onClick={() => setViewMode('table')}
+                  className={`flex items-center justify-center px-4 py-3 h-12 font-medium text-sm rounded-xl transition-all duration-200 ${
+                    viewMode === 'table'
+                      ? 'bg-gray-900 text-white shadow-lg'
+                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'
+                  }`}
+                  title="Table View"
+                >
+                  <ListBulletIcon className="h-4 w-4 mr-2" />
+                  List
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </Card>
 
-      {/* Categories Grid */}
+      {/* Categories Display */}
       {filteredCategories.length === 0 ? (
         <Card padding="lg" className="text-center">
           <div className="py-12">
             <TagIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No categories found</h3>
-            <p className="text-gray-500">
-              {searchQuery ? 'Try adjusting your search criteria.' : 'Start by adding your first category.'}
+            <p className="text-gray-500 mb-4">
+              {categories.length === 0 
+                ? "You haven't added any categories yet. Start organizing your product inventory!" 
+                : "Try adjusting your search criteria."
+              }
             </p>
+            {categories.length === 0 && (
+              <Button
+                variant="gold"
+                icon={<PlusIcon className="h-4 w-4" />}
+                onClick={() => setIsModalOpen(true)}
+              >
+                Add Your First Category
+              </Button>
+            )}
           </div>
         </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      ) : viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category, index) => (
-            <Card key={category.id} padding="lg" shadow="elegant" className="hover:shadow-lg transition-shadow">
-              <div className="space-y-4">
+            <Card key={category.id} hover className="relative overflow-hidden card-hover group h-full">
+              <div className="p-6 h-full flex flex-col">
                 {/* Category Header */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className={`h-12 w-12 bg-gradient-to-br ${getCategoryColor(index)} rounded-lg flex items-center justify-center`}>
-                      <span className="text-2xl">{getCategoryIcon(category.name)}</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    <div className={`h-12 w-12 bg-gradient-to-br ${getCategoryColor(index)} rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 flex items-center justify-center flex-shrink-0`}>
+                      <span className="text-2xl drop-shadow-sm">{getCategoryIcon(category.name)}</span>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-lg">{category.name}</h3>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-gray-900 text-lg text-contrast leading-tight">{category.name}</h3>
                     </div>
                   </div>
 
-                  <div className="flex space-x-2">
+                  <div className="flex items-center space-x-1 opacity-60 group-hover:opacity-100 transition-opacity duration-200 ml-3">
                     <button
                       onClick={() => handleEdit(category)}
-                      className="p-2 text-gray-400 hover:text-purple-600 transition-colors"
+                      className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50/80 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
                       title="Edit category"
                     >
                       <PencilIcon className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(category.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                      className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-red-600 hover:bg-red-50/80 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
                       title="Delete category"
                     >
                       <TrashIcon className="h-4 w-4" />
@@ -208,19 +370,102 @@ const CategoriesPage: React.FC = () => {
                 </div>
 
                 {/* Category Description */}
-                <div className="text-sm text-gray-600 line-clamp-3">
-                  {category.description}
+                <div className="flex-1 mb-4">
+                  <p className="text-sm text-gray-600 leading-relaxed overflow-hidden" style={{ 
+                    display: '-webkit-box', 
+                    WebkitLineClamp: 3, 
+                    WebkitBoxOrient: 'vertical' as const 
+                  }}>
+                    {category.description || 'No description available'}
+                  </p>
                 </div>
 
-                {/* Category Stats (placeholder for future use) */}
-                <div className="pt-2 border-t border-gray-200 flex items-center text-xs text-gray-500">
-                  <SparklesIcon className="h-3 w-3 mr-1" />
-                  Category ID: {category.id}
+                {/* Category Footer */}
+                <div className="pt-3 border-t border-gray-200/60 flex items-center justify-between text-xs">
+                  <div className="flex items-center text-gray-500">
+                    <SparklesIcon className="h-3 w-3 mr-1 flex-shrink-0" />
+                    <span>ID: {category.id}</span>
+                  </div>
+                  <div className="text-gray-400 font-medium">
+                    {new Date(category.created_at || Date.now()).toLocaleDateString()}
+                  </div>
                 </div>
               </div>
             </Card>
           ))}
         </div>
+      ) : (
+        <Card padding="none">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                  <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                  <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                  <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredCategories.map((category, index) => (
+                  <tr key={category.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className={`h-10 w-10 bg-gradient-to-br ${getCategoryColor(index)} rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0`}>
+                          <span className="text-lg">{getCategoryIcon(category.name)}</span>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-medium text-gray-900 truncate">{category.name}</div>
+                          <div className="md:hidden text-xs text-gray-500 mt-1 truncate" title={category.description}>
+                            {category.description || 'No description'}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="hidden md:table-cell px-6 py-4">
+                      <div className="text-sm text-gray-900 max-w-sm" title={category.description}>
+                        <p className="leading-relaxed overflow-hidden" style={{ 
+                          display: '-webkit-box', 
+                          WebkitLineClamp: 2, 
+                          WebkitBoxOrient: 'vertical' as const 
+                        }}>
+                          {category.description || 'No description available'}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {category.id}
+                    </td>
+                    <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(category.created_at || Date.now()).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          onClick={() => handleEdit(category)}
+                          className="inline-flex items-center justify-center px-3 py-1.5 border border-blue-300 bg-white text-blue-700 hover:bg-blue-50 hover:border-blue-400 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md"
+                          title="Edit category"
+                        >
+                          <PencilIcon className="h-4 w-4 sm:mr-1" />
+                          <span className="hidden sm:inline">Edit</span>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(category.id)}
+                          className="inline-flex items-center justify-center px-3 py-1.5 border border-red-300 bg-white text-red-700 hover:bg-red-50 hover:border-red-400 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md"
+                          title="Delete category"
+                        >
+                          <TrashIcon className="h-4 w-4 sm:mr-1" />
+                          <span className="hidden sm:inline">Delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
       )}
 
       {/* Category Form Modal */}

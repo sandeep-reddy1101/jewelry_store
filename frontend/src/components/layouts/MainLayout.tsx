@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { STORE_DISPLAY } from '../../config/store';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       '/analytics': 'Analytics & Reports',
       '/settings': 'System Settings',
     };
-    return routes[pathname] || 'Jewelry Store Management';
+    return routes[pathname] || STORE_DISPLAY.systemName;
   };
 
   const showSearchBar = ['/products', '/invoices', '/vendors', '/employees'].includes(location.pathname);

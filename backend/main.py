@@ -59,7 +59,7 @@ app.include_router(miscellaneous_router)
 @app.get("/")
 async def root():
     logger.info("Root endpoint accessed.")
-    return {"message": "Welcome to Jewelry Store API"}
+    return {"message": "Welcome to Vasudha Jewelry Store API"}
 
 @app.get("/health")
 async def health_check():

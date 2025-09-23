@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ title, onSearch, showSearch = false }) 
             <button className="px-3 py-1 text-xs bg-jewelry-gold text-gray-900 font-semibold rounded-full hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105">
               New Sale
             </button>
-            <button className="px-3 py-1 text-xs bg-modern-primary text-white font-semibold rounded-full hover:shadow-glow-primary transition-all duration-300 transform hover:scale-105">
+            <button className="px-3 py-1 text-xs bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-full hover:shadow-glow-primary transition-all duration-300 transform hover:scale-105 hover:from-primary-600 hover:to-primary-700">
               Add Product
             </button>
           </div>
