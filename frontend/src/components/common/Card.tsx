@@ -7,6 +7,7 @@ interface CardProps {
   shadow?: 'none' | 'sm' | 'md' | 'lg' | 'elegant';
   hover?: boolean;
   bordered?: boolean;
+  allowOverflow?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -16,8 +17,9 @@ const Card: React.FC<CardProps> = ({
   shadow = 'md',
   hover = false,
   bordered = true,
+  allowOverflow = false,
 }) => {
-  const baseClasses = 'bg-white/90 backdrop-blur-sm rounded-2xl transition-all duration-300 relative overflow-hidden';
+  const baseClasses = `bg-white/90 backdrop-blur-sm rounded-2xl transition-all duration-300 relative ${allowOverflow ? 'overflow-visible' : 'overflow-hidden'}`;
   
   const paddingClasses = {
     none: '',

@@ -6,6 +6,7 @@ import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import Card from '../../components/common/Card';
 import Spinner from '../../components/common/Spinner';
+import SearchableSelect from '../../components/common/SearchableSelect';
 import {
   PlusIcon,
   XMarkIcon,
@@ -189,7 +190,7 @@ const NewInvoicePage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-8 relative">
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -220,9 +221,9 @@ const NewInvoicePage: React.FC = () => {
         </Card>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-8 relative">
         {/* Customer Information Card */}
-        <Card hover shadow="elegant">
+        <Card shadow="elegant" allowOverflow={true} className="relative z-10">
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-sm border border-blue-400/20">
               <UserIcon className="h-5 w-5 text-white stroke-2" style={{ color: '#ffffff' }} />
@@ -238,36 +239,19 @@ const NewInvoicePage: React.FC = () => {
                   <span>Customer</span>
                 </div>
               </label>
-              <div className="relative">
-                <select
-                  value={selectedCustomer}
-                  onChange={(e) => setSelectedCustomer(e.target.value ? parseInt(e.target.value) : '')}
-                  className={`block w-full rounded-xl border-0 py-3 px-4 pr-12 text-gray-800 bg-white/80 backdrop-blur-sm ring-1 ring-inset transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg custom-select ${
-                    errors.customer 
-                      ? 'ring-red-300 focus:ring-red-500 bg-red-50/50' 
-                      : 'ring-gray-200 focus:ring-primary-500 hover:ring-gray-300 focus:ring-2 focus:ring-inset focus:bg-white'
-                  }`}
-                >
-                  <option value="">Select Customer</option>
-                  {users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name}
-                    </option>
-                  ))}
-                </select>
-                {/* Custom dropdown arrow */}
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400 hover:text-primary-500 transition-colors duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </div>
-              {errors.customer && (
-                <p className="mt-2 text-sm text-red-600 flex items-center space-x-1">
-                  <XMarkIcon className="h-4 w-4" />
-                  <span>{errors.customer}</span>
-                </p>
-              )}
+              <SearchableSelect
+                options={users.map(user => ({
+                  value: user.id,
+                  label: user.name,
+                  subtitle: user.email ? `📧 ${user.email}` : undefined,
+                  icon: '👤'
+                }))}
+                value={selectedCustomer}
+                onChange={(value) => setSelectedCustomer(value as number | '')}
+                placeholder="Select Customer"
+                searchPlaceholder="Search customers..."
+                error={errors.customer}
+              />
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-800 mb-2">
@@ -276,41 +260,25 @@ const NewInvoicePage: React.FC = () => {
                   <span>Payment Method</span>
                 </div>
               </label>
-              <div className="relative">
-                <select
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                  className={`block w-full rounded-xl border-0 py-3 px-4 pr-12 text-gray-800 bg-white/80 backdrop-blur-sm ring-1 ring-inset transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg custom-select ${
-                    errors.paymentMethod 
-                      ? 'ring-red-300 focus:ring-red-500 bg-red-50/50' 
-                      : 'ring-gray-200 focus:ring-primary-500 hover:ring-gray-300 focus:ring-2 focus:ring-inset focus:bg-white'
-                  }`}
-                >
-                  <option value="">Select Payment Method</option>
-                  <option value="cash">💵 Cash</option>
-                  <option value="card">💳 Card</option>
-                  <option value="upi">📱 UPI</option>
-                  <option value="bank_transfer">🏦 Bank Transfer</option>
-                </select>
-                {/* Custom dropdown arrow */}
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400 hover:text-primary-500 transition-colors duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </div>
-              {errors.paymentMethod && (
-                <p className="mt-2 text-sm text-red-600 flex items-center space-x-1">
-                  <XMarkIcon className="h-4 w-4" />
-                  <span>{errors.paymentMethod}</span>
-                </p>
-              )}
+              <SearchableSelect
+                options={[
+                  { value: 'cash', label: 'Cash', icon: '💵', subtitle: 'Physical cash payment' },
+                  { value: 'card', label: 'Card', icon: '💳', subtitle: 'Credit/Debit card payment' },
+                  { value: 'upi', label: 'UPI', icon: '�', subtitle: 'Digital UPI payment' },
+                  { value: 'bank_transfer', label: 'Bank Transfer', icon: '🏦', subtitle: 'Direct bank transfer' }
+                ]}
+                value={paymentMethod}
+                onChange={(value) => setPaymentMethod(value as string)}
+                placeholder="Select Payment Method"
+                searchPlaceholder="Search payment methods..."
+                error={errors.paymentMethod}
+              />
             </div>
           </div>
         </Card>
 
         {/* Product Selection & Items Card */}
-        <Card hover shadow="elegant">
+        <Card shadow="elegant" allowOverflow={true} className="relative z-5">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-lg shadow-sm border border-amber-300/20">
@@ -331,39 +299,26 @@ const NewInvoicePage: React.FC = () => {
                 <span>Add Product</span>
               </div>
             </label>
-            <div className="relative">
-              <select
-                onChange={(e) => {
-                  if (e.target.value) {
-                    handleProductSelect(e.target.value);
-                    e.target.value = ''; // Reset selection
-                  }
-                }}
-                className="block w-full rounded-xl border-0 py-3 px-4 pr-12 text-gray-800 bg-white/80 backdrop-blur-sm ring-1 ring-inset ring-gray-200 focus:ring-primary-500 hover:ring-gray-300 focus:ring-2 focus:ring-inset focus:bg-white transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg custom-select"
-                defaultValue=""
-              >
-                <option value="">Select Product to Add</option>
-                {products
-                  .filter(product => !selectedProducts[product.id])
-                  .map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.name} - {STORE_CONFIG.currency}{product.sale_price}
-                  </option>
-                ))}
-              </select>
-              {/* Custom dropdown arrow */}
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400 hover:text-primary-500 transition-colors duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </div>
-            </div>
-            {errors.products && (
-              <p className="mt-2 text-sm text-red-600 flex items-center space-x-1">
-                <XMarkIcon className="h-4 w-4" />
-                <span>{errors.products}</span>
-              </p>
-            )}
+            <SearchableSelect
+              options={products
+                .filter(product => !selectedProducts[product.id])
+                .map(product => ({
+                  value: product.id,
+                  label: product.name,
+                  subtitle: `${STORE_CONFIG.currency}${product.sale_price} ${product.category ? `• ${product.category.name}` : ''}`,
+                  icon: '💎'
+                }))}
+              value=""
+              onChange={(value) => {
+                if (value) {
+                  handleProductSelect(value.toString());
+                }
+              }}
+              placeholder="Select Product to Add"
+              searchPlaceholder="Search products..."
+              error={errors.products}
+              allowClear={false}
+            />
           </div>
 
           {/* Selected Products List */}

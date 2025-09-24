@@ -349,6 +349,22 @@ body {
   transform: translateY(-50%) rotate(180deg);
 }
 
+/* Dropdown animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.2s ease-out forwards;
+}
+
 /* Mobile optimizations */
 @media (max-width: 640px) {
   .glass-card {

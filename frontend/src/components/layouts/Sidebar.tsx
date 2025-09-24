@@ -87,8 +87,8 @@ const Sidebar: React.FC = () => {
         
         <div className="flex items-center space-x-3 relative z-10">
           <div className="relative">
-            <SparklesIcon className="h-10 w-10 text-gray-900 drop-shadow-lg animate-pulse" />
-            <div className="absolute inset-0 bg-jewelry-gold/20 rounded-full animate-ping"></div>
+            <SparklesIcon className="h-10 w-10 text-gray-900 drop-shadow-lg" />
+            <div className="absolute inset-0 bg-jewelry-gold/20 rounded-full"></div>
           </div>
           <div className="transition-all duration-300">
             <span className="text-gray-900 font-display font-bold text-2xl drop-shadow-lg tracking-wide">
@@ -141,7 +141,7 @@ const Sidebar: React.FC = () => {
                     
                     {/* Badge */}
                     {item.badge && (
-                      <div className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg animate-pulse">
+                      <div className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
                         {item.badge}
                       </div>
                     )}
@@ -152,8 +152,8 @@ const Sidebar: React.FC = () => {
                     <span className="font-medium tracking-wide">{item.name}</span>
                     {isActive && (
                       <div className="flex items-center space-x-1">
-                        <div className="h-1.5 w-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-                        <div className="h-1 w-1 bg-blue-400 rounded-full animate-pulse animation-delay-75"></div>
+                        <div className="h-1.5 w-1.5 bg-blue-500 rounded-full"></div>
+                        <div className="h-1 w-1 bg-blue-400 rounded-full"></div>
                       </div>
                     )}
                   </div>
@@ -176,7 +176,7 @@ const Sidebar: React.FC = () => {
                 <div className="h-10 w-10 bg-gradient-to-br from-jewelry-gold to-jewelry-gold-dark rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-sm font-bold text-gray-900 drop-shadow-sm">V</span>
                 </div>
-                <div className="absolute -top-1 -right-1 h-4 w-4 bg-gradient-to-br from-green-400 to-green-500 rounded-full border-2 border-white shadow-sm animate-pulse"></div>
+                <div className="absolute -top-1 -right-1 h-4 w-4 bg-gradient-to-br from-green-400 to-green-500 rounded-full border-2 border-white shadow-sm"></div>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-gray-800 truncate tracking-wide">{STORE_DISPLAY.brandName}</p>

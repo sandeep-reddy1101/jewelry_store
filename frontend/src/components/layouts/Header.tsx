@@ -10,6 +10,7 @@ import {
   UserIcon,
   SunIcon,
   MoonIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 
 interface HeaderProps {
@@ -103,17 +104,17 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
         </div>
 
         {/* Right section - Actions & User */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
 
           {/* Quick Actions Menu */}
           <div className="relative" ref={quickActionsRef}>
             <button
               onClick={() => setShowQuickActions(!showQuickActions)}
-              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-jewelry-gold to-jewelry-gold-accent text-gray-900 font-semibold rounded-xl hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-jewelry-gold/50"
+              className="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-jewelry-gold to-jewelry-gold-accent text-gray-900 font-semibold rounded-xl hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-jewelry-gold/50"
             >
-              <PlusIcon className="h-4 w-4" />
+              <PlusIcon className="h-5 w-5" />
               <span className="hidden sm:block">Quick Actions</span>
-              <ChevronDownIcon className={`h-4 w-4 transition-transform duration-200 ${showQuickActions ? 'rotate-180' : ''}`} />
+              <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${showQuickActions ? 'rotate-180' : ''}`} />
             </button>
 
             {showQuickActions && (
@@ -137,7 +138,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
           {/* Theme Toggle */}
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500/50 rounded-xl transition-colors duration-200 hover:bg-gray-50/50"
+            className="flex items-center justify-center p-2.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100/70 focus:outline-none focus:ring-2 focus:ring-primary-500/50 rounded-xl transition-all duration-200"
             aria-label="Toggle dark mode"
           >
             {isDarkMode ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
@@ -147,12 +148,12 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
           <div className="relative" ref={notificationRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500/50 rounded-xl transition-colors duration-200 hover:bg-gray-50/50"
+              className="relative flex items-center justify-center p-2.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100/70 focus:outline-none focus:ring-2 focus:ring-primary-500/50 rounded-xl transition-all duration-200"
               aria-label="View notifications"
             >
-              <BellIcon className="h-6 w-6" />
+              <BellIcon className="h-5 w-5" />
               {notifications.length > 0 && (
-                <span className="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 text-xs font-bold text-white bg-red-500 rounded-full ring-2 ring-white animate-pulse">
+                <span className="absolute -top-1 -right-1 flex items-center justify-center h-4 w-4 text-xs font-bold text-white bg-red-500 rounded-full ring-2 ring-white">
                   {notifications.length}
                 </span>
               )}
@@ -170,10 +171,10 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                         <div key={notification.id} className="p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200 group">
                           <div className="flex items-start justify-between">
                             <div className="flex items-start space-x-3 flex-1">
-                              <div className={`flex-shrink-0 w-2 h-2 rounded-full mt-2 ${
-                                notification.type === 'warning' ? 'bg-warning-400' :
-                                notification.type === 'success' ? 'bg-success-400' :
-                                'bg-primary-400'
+                              <div className={`flex-shrink-0 w-2.5 h-2.5 rounded-full mt-2 ${
+                                notification.type === 'warning' ? 'bg-amber-400' :
+                                notification.type === 'success' ? 'bg-green-400' :
+                                'bg-blue-400'
                               }`} />
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm text-gray-900 leading-relaxed">{notification.message}</p>
@@ -181,12 +182,10 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                               </div>
                             </div>
                             <button 
-                              className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 transition-opacity duration-200 p-1 rounded"
+                              className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 transition-all duration-200 p-1.5 rounded-lg hover:bg-gray-100"
                               aria-label="Dismiss notification"
                             >
-                              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                              </svg>
+                              <XMarkIcon className="h-4 w-4" />
                             </button>
                           </div>
                         </div>
@@ -199,7 +198,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                     </>
                   ) : (
                     <div className="p-8 text-center bg-white">
-                      <BellIcon className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                      <BellIcon className="h-10 w-10 text-gray-300 mx-auto mb-3" />
                       <p className="text-gray-500 text-sm">No new notifications</p>
                     </div>
                   )}
@@ -212,33 +211,33 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
           <div className="relative" ref={userMenuRef}>
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center space-x-3 p-2 text-sm rounded-xl text-gray-700 hover:bg-gray-50/80 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all duration-200 group"
+              className="flex items-center space-x-3 p-2.5 text-sm rounded-xl text-gray-700 hover:bg-gray-100/70 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all duration-200 group"
             >
               <div className="relative">
-                <UserCircleIcon className="h-8 w-8 text-gray-400 group-hover:text-gray-600 transition-colors duration-200" />
-                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success-400 rounded-full border-2 border-white"></div>
+                <UserCircleIcon className="h-7 w-7 text-gray-500 group-hover:text-gray-700 transition-colors duration-200" />
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success-400 rounded-full border-2 border-white"></div>
               </div>
               <div className="hidden md:block text-left">
                 <div className="font-medium text-gray-900">John Doe</div>
                 <div className="text-xs text-gray-500">{getGreeting()} • Store Manager</div>
               </div>
-              <ChevronDownIcon className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
+              <ChevronDownIcon className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
             </button>
 
             {showUserMenu && (
               <div className="absolute right-0 mt-2 w-56 bg-white backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 overflow-hidden animate-slide-down z-[9999]">
                 <div className="p-2 bg-white">
                   <button className="w-full flex items-center space-x-3 px-3 py-3 text-left text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-200 group">
-                    <UserIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-600" />
+                    <UserIcon className="h-5 w-5 text-gray-500 group-hover:text-gray-700" />
                     <span className="font-medium">Profile</span>
                   </button>
                   <button className="w-full flex items-center space-x-3 px-3 py-3 text-left text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-200 group">
-                    <CogIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-600" />
+                    <CogIcon className="h-5 w-5 text-gray-500 group-hover:text-gray-700" />
                     <span className="font-medium">Settings</span>
                   </button>
                   <hr className="my-2 border-gray-200" />
                   <button className="w-full flex items-center space-x-3 px-3 py-3 text-left text-red-600 hover:bg-red-50 rounded-xl transition-colors duration-200 group">
-                    <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                    <ArrowRightOnRectangleIcon className="h-5 w-5 text-red-500 group-hover:text-red-600" />
                     <span className="font-medium">Sign Out</span>
                   </button>
                 </div>
