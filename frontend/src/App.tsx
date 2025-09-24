@@ -6,6 +6,7 @@ import VendorsPage from './pages/Vendors/VendorsPage';
 import CategoriesPage from './pages/Categories/CategoriesPage';
 import InvoicesPage from './pages/Invoices/InvoicesPage';
 import NewInvoicePage from './pages/Invoices/NewInvoicePage';
+import AnalyticsPageWrapper from './pages/Analytics';
 import './App.css';
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
           <Route path="/invoices" element={<InvoicesPage />} />
           <Route path="/invoices/new" element={<NewInvoicePage />} />
           <Route path="/employees" element={<div>Employees</div>} />
-          <Route path="/analytics" element={<div>Analytics</div>} />
+          <Route path="/analytics" element={<AnalyticsPageWrapper />} />
           <Route path="/settings" element={<div>Settings</div>} />
         </Routes>
       </MainLayout>
